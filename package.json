@@ -56,5 +56,15 @@
     "react-easy-edit": "^1.13.0",
     "react-moment": "^1.1.1",
     "react-rnd": "^10.2.4"
-  }
+  },
+  "keywords": [
+    "calendar",
+    "scheduler",
+    "resource planning",
+    "horizontal scheduler",
+    "react",
+    "reservations",
+    "gantt",
+    "resources"
+  ]
 }

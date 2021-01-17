@@ -62,7 +62,7 @@ class Schedule extends React.Component {
     }
 
     addNewItem(e){
-      if(e.target.className.indexOf('scheduleRow') > 0){
+      if(e.target.className.indexOf('schedule-row') > 0){
 
         var bounds = e.target.getBoundingClientRect()
         var headerHeight = 50 //height of the week title header
@@ -71,7 +71,7 @@ class Schedule extends React.Component {
         var rowId = e.target.id
 
         var s = new ScheduleItem()
-        var start = s.computeStartDate(x, this.state.grid)
+        var start = s.computeStartDate(x, this.state.weeks, this.state.grid)
         var thread = s.computeThread(y, this.state.grid)
         
         var rows = [...this.state.rows]

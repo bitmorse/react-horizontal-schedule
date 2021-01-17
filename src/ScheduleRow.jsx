@@ -31,7 +31,6 @@ class ScheduleRow extends React.Component {
         itemIndex: index,
         dimensions: dimensions 
       }
-
       this.props.rowUpdated((item))
     }
 

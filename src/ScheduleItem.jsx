@@ -27,25 +27,24 @@ class ScheduleItem extends React.Component {
     }
 
     computeStartX(startDate, weeks, grid){
-      var x = 0
       var startDay = moment(startDate).isoWeekday() - 1 //monday should be 0 (iso week starts on monday.
                                                         // isoWeekday() returns 1 for monday)
       var week = weeks.find(o => moment(o.startDate) <= moment(startDate) && moment(startDate) <= moment(o.endDate))
+      
       var startWeek = weeks.indexOf(week)
-      x = (startWeek * 7 + startDay) * grid.x
+      
 
-      return x
+      return (startWeek * 7 + startDay) * grid.x
     }
 
-    computeStartDate(x, grid){
-      x += 1 //adding one pixel fixes the case where the position is unchanged but the date is recomputed to currentDate minus one
+    computeStartDate(x, weeks, grid){
+      //x += 1 //adding one pixel fixes the case where the position is unchanged but the date is recomputed to currentDate minus one
       var inc = grid.x
       var daysInWeek = 7
       var startsInWeek = Math.floor(Math.ceil(x/inc)/daysInWeek)
       var startsOnDay = Math.ceil(x/inc) - startsInWeek*daysInWeek
-      var gridStartDateWeek = moment(grid.startDate).week()
-      var gridStartDate = moment().week(gridStartDateWeek)
-      var itemStartDate = gridStartDate.add(startsOnDay, 'd').add(startsInWeek, 'w')
+      var gridStartDate = moment(weeks[0].startDate)
+      var itemStartDate = gridStartDate.add(startsInWeek, 'w').add(startsOnDay, 'd')
 
       return {startDate: itemStartDate.format('YYYY-MM-DD')}
     }
@@ -55,7 +54,7 @@ class ScheduleItem extends React.Component {
       var newDays = this.props.days + size.widthDelta/inc
       this.props.onDurationUpdated(id, newDays)
 
-      var start = this.computeStartDate(size.x, this.props.grid) // computes start  of event
+      var start = this.computeStartDate(size.x,this.props.weeks, this.props.grid) // computes start  of event
       var thread = this.computeThread(size.y, this.props.grid)
       var position = {
         startDate: start.startDate,
@@ -65,10 +64,11 @@ class ScheduleItem extends React.Component {
     }
 
     onPositionUpdated(id, position){
-      var start = this.computeStartDate(position.x, this.props.grid) // computes start  of event
+      var start = this.computeStartDate(position.x, this.props.weeks, this.props.grid) // computes start  of event
       var thread = this.computeThread(position.y, this.props.grid)
       position.startDate = start.startDate
       position.thread = thread
+
       this.props.onPositionUpdated(id, position)
     }
 
