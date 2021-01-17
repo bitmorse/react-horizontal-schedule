@@ -1,10 +1,19 @@
 import React from 'react'
-
-import { ExampleComponent } from 'react-horizontal-schedule'
+import { Schedule } from 'react-horizontal-schedule'
 import 'react-horizontal-schedule/dist/index.css'
 
 const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+
+  const SCHEDULE_DATA = JSON.parse(document.getElementById('schedule-data').textContent);
+  
+  return <Schedule 
+          filterWidth={250}
+          startDate={SCHEDULE_DATA.startDate}
+          endDate={SCHEDULE_DATA.endDate}
+          timelineHeight={SCHEDULE_DATA.timelineHeight}
+          dayWidth={SCHEDULE_DATA.dayWidth}
+          rows={SCHEDULE_DATA.rows}
+        />
 }
 
 export default App

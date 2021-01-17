@@ -1,9 +1,67 @@
-/* add css module styles here (optional) */
+*{
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -ms-box-sizing:border-box;
+  box-sizing:border-box;
+}
 
-.test {
-  margin: 2em;
-  padding: 0.5em;
-  border: 2px solid #000;
-  font-size: 2em;
+.schedule {
+  overflow: auto;
+}
+
+.scheduleRow {
+  flex-shrink: 0;
+  overflow: auto;
+}
+
+
+.weekHeader {
+  display: flex;
+  flex-wrap: nowrap;    
+  width: 100%;
+  height: 50px;
+}
+
+.weekHeader > div {
+  background-color: #f1f1f1;
   text-align: center;
+  border-right: 1px #ddd solid;
+  border-left: 1px #ddd solid;
+  flex-shrink: 0;
+}
+
+
+.scheduleItem > div {
+  overflow: hidden;
+}
+.scheduleItemDate {
+  font-size: 9px;
+  width: 100%;
+  white-space: nowrap
+}
+
+.scheduleRow .easy-edit-wrapper {
+  font-size: 10px;
+}
+
+.filter {
+  border-bottom: 1px solid #eee;
+}
+.filter h5 {
+  margin: 0;
+  padding: 0;
+}
+.filter h6 {
+  margin: 0;
+  padding: 0;
+}
+
+.filter .title {
+  margin: 28px 0 0 10px;
+}
+.filter .roundAvatar {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin: 20px 0 0 20px;
 }
