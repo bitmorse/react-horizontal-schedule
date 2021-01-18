@@ -24,13 +24,24 @@ import React, { Component } from 'react'
 import { Schedule } from 'react-horizontal-schedule'
 import 'react-horizontal-schedule/dist/index.css'
 
-
 const App = () => {
 
   const SCHEDULE_DATA = JSON.parse(document.getElementById('schedule-data').textContent);
-  
+  const itemHandler = function(r){
+          return new Promise((resolve, reject)=>{
+            resolve({id:98}) //return an object with id like this if you want to assign the id to a created item
+          })
+  }
+
   return <Schedule 
+          onScheduleItemUpdated={itemHandler}
+          onScheduleItemCreated={itemHandler}
+          onScheduleItemRemoved={itemHandler}
           filterWidth={250}
+          zoomMin={25}
+          zoomMax={250}
+          zoomStep={5}
+          newEventDays={1}
           startDate={SCHEDULE_DATA.startDate}
           endDate={SCHEDULE_DATA.endDate}
           timelineHeight={SCHEDULE_DATA.timelineHeight}
@@ -43,52 +54,55 @@ const App = () => {
 You can let the server present data via a script tag (of course you can also fetch from an API):
 ```html
     <script id="schedule-data" type="application/json">
-      {
-      "postUrl": "http://jsonplaceholder.typicode.com/posts",
-      "startDate": "2021-01-01",
-      "endDate": "2021-07-01",
-      "dayWidth": 25,
-      "timelineHeight": 40,
-      "rows": [
-        {
-          "title": "Bert Macklin",
-          "subtitle": "Dev",
-          "imgUrl": "https://placekitten.com/50/50",
-          "threads": 3,
-          "items": [
-            {
-              "startDate": "2021-01-04",
-              "thread": 0,
-              "days": 7,
-              "title": "A",
-              "color": "green"
-            }
-          ]
-        },
-        {
-          "title": "Max Must",
-          "subtitle": "Agent",
-          "imgUrl": "https://placekitten.com/50/50",
-          "threads": 3,
-          "items": [
-            {
-              "startDate": "2021-02-15",
-              "thread": 0,
-              "days": 5,
-              "title": "C",
-              "color": "purple"
-            },
-            {
-              "startDate": "2021-02-25",
-              "thread": 1,
-              "days": 5,
-              "title": "D",
-              "color": "yellow"
-            }
-          ]
-        }
-      ]
-    }
+       {
+        "postUrl": "http://jsonplaceholder.typicode.com/posts",
+        "startDate": "2021-01-01",
+        "endDate": "2021-07-01",
+        "dayWidth": 25,
+        "timelineHeight": 40,
+        "rows": [
+          { 
+            "title": "Bert Macklin",
+            "subtitle": "Dev",
+            "imgUrl": "https://placekitten.com/50/50",
+            "threads": 3,
+            "items": [
+              {
+                "id": 1,
+                "startDate": "2021-01-04",
+                "thread": 0,
+                "days": 7,
+                "title": "A",
+                "color": "green"
+              }
+            ]
+          },
+          {
+            "title": "Max Must",
+            "subtitle": "Agent",
+            "imgUrl": "https://placekitten.com/50/50",
+            "threads": 3,
+            "items": [
+              {
+                "id": 23,
+                "startDate": "2021-02-15",
+                "thread": 0,
+                "days": 5,
+                "title": "C",
+                "color": "purple"
+              },
+              {
+                "id": 24,
+                "startDate": "2021-02-25",
+                "thread": 1,
+                "days": 5,
+                "title": "D",
+                "color": "yellow"
+              }
+            ]
+          }
+        ]
+      }
     </script>
 
 ```

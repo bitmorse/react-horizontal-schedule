@@ -10,6 +10,7 @@
 }
 
 .scheduleRow {
+  touch-action: none;
   flex-shrink: 0;
   overflow: auto;
   background-color: transparent;
@@ -27,17 +28,26 @@
 }
 
 .weekHeader > div {
-  background-color: #f1f1f1;
+  background-color: #fbfbfb;
   text-align: center;
-  border-right: 1px #ddd solid;
-  border-left: 1px #ddd solid;
+  border: 1px #eee solid;
   flex-shrink: 0;
+  vertical-align: middle;
+  line-height: 1.5;
 }
 
+.zoom {
+  padding: 15px;
+}
+
+.zoom > input {
+  width: 90%;
+}
 
 .scheduleItem > div {
   overflow: hidden;
 }
+
 .scheduleItemDate {
   font-size: 9px;
   width: 100%;
@@ -48,9 +58,22 @@
   font-size: 10px;
 }
 
-.filter {
-  border-bottom: 1px solid #eee;
+.scheduleRow input {
+  font-size: 10px;
+  background-color: transparent;
+  border: none;
+  outline: none;   
+  padding: 0;
+  margin: 0;
+  font-weight: bold;
 }
+
+.filter {
+  border-top: 1px #eee solid;
+  position: absolute;
+  margin-top:-1px;
+}
+
 .filter h5 {
   margin: 0;
   padding: 0;
@@ -61,10 +84,9 @@
 }
 
 .filter .title {
-  margin: 28px 0 0 10px;
-  top: auto;
-  left: 80px;
-  position: fixed;
+  margin: 28px 0 0 80px;
+  position: absolute;
+  z-index: 2;
 }
 
 .filter .roundAvatar {
@@ -72,7 +94,7 @@
   width: 50px;
   height: 50px;
   margin: 20px 0 0 20px;
-  top: auto;
-  left: auto;
-  position: fixed;
+  position: absolute;
+  z-index: 2;
+
 }

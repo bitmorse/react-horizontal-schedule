@@ -1,6 +1,6 @@
 {
   "name": "react-horizontal-schedule",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A horizontally scrolling week view for scheduling things like rooms, meetings, projects, resources.",
   "author": "bitmorse",
   "license": "MIT",

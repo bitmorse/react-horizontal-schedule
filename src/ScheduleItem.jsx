@@ -9,16 +9,15 @@ class ScheduleItem extends React.Component {
     constructor(props) {
       super(props);
 
-      this.state = {
-      }
-
       this.onPositionUpdated = this.onPositionUpdated.bind(this)
       this.onSizeUpdated = this.onSizeUpdated.bind(this)
       this.computeStartX = this.computeStartX.bind(this)
       this.computeStartDate = this.computeStartDate.bind(this)
       this.computeThread = this.computeThread.bind(this)
+      this.onRightClick = this.onRightClick.bind(this)
     }
 
+  
     computeThread(y, grid){
       var inc = grid.y
       var thread = Math.ceil(y/inc)
@@ -54,6 +53,8 @@ class ScheduleItem extends React.Component {
       var newDays = this.props.days + size.widthDelta/inc
       this.props.onDurationUpdated(id, newDays)
 
+      if(newDays == 0) this.props.onRemoved(id)
+      
       var start = this.computeStartDate(size.x,this.props.weeks, this.props.grid) // computes start  of event
       var thread = this.computeThread(size.y, this.props.grid)
       var position = {
@@ -72,13 +73,21 @@ class ScheduleItem extends React.Component {
       this.props.onPositionUpdated(id, position)
     }
 
+    onRightClick(e){
+      e.preventDefault();
+
+      var colors = ['#ffc600', '#ff3b30', '#34c759', '#5ac8fa', '#eee', '#af52de']
+      var nextColor = colors[(colors.indexOf(this.props.color)+1) % (colors.length-1)]
+      this.props.onColorUpdated(this.props.id, nextColor)
+    }
+
     render() {
       var x = this.computeStartX(this.props.startDate, this.props.weeks, this.props.grid)
       var y = this.props.thread * this.props.grid.y
 
       return <Rnd
           bounds="parent"
-
+          onContextMenu={this.onRightClick}
           onResizeStop={(e, direction, ref, delta, position)=>{
             this.onSizeUpdated(this.props.id, {x:position.x, y: position.y, widthDelta: delta.width})
           }}
@@ -119,11 +128,11 @@ class ScheduleItem extends React.Component {
               fontSize: '10px'
             }}
           > 
-          <div className={styles.scheduleItemDate}>{moment(this.props.startDate).format('D MMM')} for {this.props.days}d</div>
+          <div className={styles.scheduleItemDate}>{moment(this.props.startDate).format('dd, D MMM')} ({this.props.days}d)</div>
           <div>
             <EasyEdit
                 className={styles.scheduleItemInput}
-                placeholder={this.props.title}
+                placeholder={this.props.title || ''}
                 onSave={(e)=>{this.props.onTitleUpdated(this.props.id, e)}}
                 type={Types.TEXT}
                 hideSaveButton={true}

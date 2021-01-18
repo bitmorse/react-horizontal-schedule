@@ -12,6 +12,18 @@ class ScheduleRow extends React.Component {
         this.onPositionUpdated=this.onPositionUpdated.bind(this);
         this.onDurationUpdated=this.onDurationUpdated.bind(this);
         this.onTitleUpdated=this.onTitleUpdated.bind(this);
+        this.onColorUpdated=this.onColorUpdated.bind(this);
+        this.onRemoved=this.onRemoved.bind(this);
+    }
+
+
+    onRemoved(index){
+      var item = {
+        rowIndex: this.props.id,
+        itemIndex: index
+      }
+      this.props.itemRemoved((item))
+      this.setState({})
     }
     
     onDurationUpdated(index, duration){
@@ -43,15 +55,25 @@ class ScheduleRow extends React.Component {
       this.props.rowUpdated((item))
     }
 
+    onColorUpdated(index, color){
+      var item = {
+        rowIndex: this.props.id,
+        itemIndex: index,
+        color: color
+      }
+      this.props.rowUpdated((item))
+    }
+
     render() {
       var style = {
         borderBottom: '1px solid #eee', 
         position: 'relative', 
         height: this.props.threads * this.props.grid.y,
         width: this.props.grid.width,
-        backgroundSize: this.props.grid.x+'px 100%'
+        backgroundSize: this.props.grid.x+'px 100%',
+        left: this.props.grid.filterOffset
       }
-            
+      
       return <div style={{display: 'flex'}}>
               <div className={styles.filter} style={{display: 'flex', flexShrink: 0, width: this.props.grid.filterOffset}}>
                 <img src={this.props.imgUrl} className={styles.roundAvatar} alt={this.props.title} />
@@ -70,6 +92,8 @@ class ScheduleRow extends React.Component {
                           onPositionUpdated={this.onPositionUpdated} 
                           onDurationUpdated={this.onDurationUpdated} 
                           onTitleUpdated={this.onTitleUpdated} 
+                          onColorUpdated={this.onColorUpdated} 
+                          onRemoved={this.onRemoved} 
                           id={i} 
                           title={item.title} 
                           days={item.days} 

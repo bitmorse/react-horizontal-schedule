@@ -23,41 +23,68 @@ class Schedule extends React.Component {
         this.rowUpdated=this.rowUpdated.bind(this);
         this.addNewItem=this.addNewItem.bind(this);
         this.onZoomChanged=this.onZoomChanged.bind(this);
+        this.itemRemoved=this.itemRemoved.bind(this);
     }
 
-    rowUpdated(row){
-      var inc = this.state.grid.x
+    rowUpdated(updatedRow){
+      var rows = JSON.parse(JSON.stringify(this.state.rows))
+      var row = JSON.parse(JSON.stringify(updatedRow))
+      var item = rows[row.rowIndex]['items'][row.itemIndex]
 
-      var rows = [...this.state.rows]
+      if(item == undefined) return;
 
       if(row.dimensions != undefined){
-        rows[row.rowIndex]['items'][row.itemIndex].startDate = row.dimensions.startDate
-        rows[row.rowIndex]['items'][row.itemIndex].thread = row.dimensions.thread
-
-        if(rows[row.rowIndex]['items'][row.itemIndex].days == 0){
-          delete rows[row.rowIndex]['items'][row.itemIndex];
-        }
+        item.startDate = row.dimensions.startDate
+        item.thread = row.dimensions.thread
       }
 
       if(row.title != undefined){
-        rows[row.rowIndex]['items'][row.itemIndex].title = row.title 
+        item.title = row.title 
       }
-
 
       if(row.duration != undefined){
-        rows[row.rowIndex]['items'][row.itemIndex].days = row.duration 
+        item.days = row.duration 
       }
-      
-      //save changes
-      if(this.props.postUrl){
-        axios.post(this.props.postUrl, { rows })
-        .then(res => {
-          console.log(res);
-          console.log(res.data);
+
+      if(row.color != undefined){
+        item.color = row.color 
+      }
+
+      if(this.props.onScheduleItemUpdated){
+        var updatePromise = this.props.onScheduleItemUpdated(item)
+
+        updatePromise.then((updatePromiseResponse)=>{
+          console.log("updating schedule item")
+        }, reason => {
+          // rejection
+          console.error("couldnt update event", reason)
         })
       }
 
       this.setState({rows: rows})
+    }
+
+    itemRemoved(row){
+      var rows = JSON.parse(JSON.stringify(this.state.rows))
+      var item = rows[row.rowIndex]['items'][row.itemIndex]
+
+      //save changes
+      if(this.props.onScheduleItemRemoved){
+        var deletePromise = this.props.onScheduleItemRemoved(item)
+        
+        deletePromise.then((deletePromiseResponse)=>{
+          console.log("deleting on server")
+          //delete item
+          rows[row.rowIndex]['items'].splice(row.itemIndex, 1);
+          this.setState({rows: rows})
+        }, reason => {
+          console.error("couldnt delete event", reason)
+        })
+      }else{
+        //delete item
+        rows[row.rowIndex]['items'].splice(row.itemIndex, 1);
+        this.setState({rows: rows})
+      }
 
     }
 
@@ -67,7 +94,7 @@ class Schedule extends React.Component {
         var bounds = e.target.getBoundingClientRect()
         var headerHeight = 50 //height of the week title header
         var y = e.clientY - bounds.y - headerHeight
-        var x = e.clientX - bounds.x
+        var x = e.clientX - bounds.x - this.state.grid.x
         var rowId = e.target.id
 
         var s = new ScheduleItem()
@@ -77,14 +104,29 @@ class Schedule extends React.Component {
         var rows = [...this.state.rows]
         var row = {
           startDate: start.startDate,
-          days: 3,
+          days: this.props.newEventDays,
           color: '#eee',
           title: 'New event',
           thread: thread
         }
 
-        rows[rowId]['items'].push(row)
-        this.setState({rows: rows})
+        //save changes
+        if(this.props.onScheduleItemCreated){
+          var createPromise = this.props.onScheduleItemCreated(row)
+
+          createPromise.then((createPromiseResponse)=>{
+            row.id = createPromiseResponse.id
+            rows[rowId]['items'].push(row)
+            this.setState({rows: rows})
+          }, reason => {
+            // rejection
+            console.error("couldnt create event", reason)
+          })
+        }else{
+          rows[rowId]['items'].push(row)
+          this.setState({rows: rows})
+        }
+
       }
       
     }
@@ -119,9 +161,9 @@ class Schedule extends React.Component {
     render() {
       return <div className={styles.schedule}>
 
-          <div className={styles.weekHeader}>
-            <div style={{width: this.state.grid.filterOffset}}>
-              <input onChange={this.onZoomChanged} value={this.state.grid.x} id="zoom" type="range" min="5" max="50" step="5" /> 
+          <div className={styles.weekHeader} >
+            <div className={styles.zoom} style={{width: this.state.grid.filterOffset}}>
+              <input onChange={this.onZoomChanged} value={this.state.grid.x} id="zoom" type="range" min={this.props.zoomMin} max={this.props.zoomMax} step={this.props.zoomStep}  /> 
             </div>
             {this.state.weeks.map((week, i)=>{
               return <div key={i} style={{width: 7*this.state.grid.x}}>
@@ -136,6 +178,7 @@ class Schedule extends React.Component {
           </div>
 
           {this.state.rows.map((row, i) => {
+
             return <ScheduleRow 
                     title={row.title}
                     subtitle={row.subtitle}
@@ -147,6 +190,7 @@ class Schedule extends React.Component {
                     id={i} 
                     items={row.items} 
                     threads={row.threads} 
+                    itemRemoved={this.itemRemoved}
                     rowUpdated={this.rowUpdated} />
           })}
         
