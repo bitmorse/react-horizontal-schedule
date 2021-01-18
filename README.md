@@ -61,7 +61,7 @@ You can let the server present data via a script tag (of course you can also fet
         "dayWidth": 25,
         "timelineHeight": 40,
         "rows": [
-          { 
+          { "id": 1,
             "title": "Bert Macklin",
             "subtitle": "Dev",
             "imgUrl": "https://placekitten.com/50/50",
@@ -78,6 +78,7 @@ You can let the server present data via a script tag (of course you can also fet
             ]
           },
           {
+            "id":2,
             "title": "Max Must",
             "subtitle": "Agent",
             "imgUrl": "https://placekitten.com/50/50",

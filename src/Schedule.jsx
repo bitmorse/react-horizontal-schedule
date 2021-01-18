@@ -29,7 +29,8 @@ class Schedule extends React.Component {
     rowUpdated(updatedRow){
       var rows = JSON.parse(JSON.stringify(this.state.rows))
       var row = JSON.parse(JSON.stringify(updatedRow))
-      var item = rows[row.rowIndex]['items'][row.itemIndex]
+      var rowIndex = this.state.rows.findIndex(o=>o.id == row.rowId) 
+      var item = rows[rowIndex]['items'][row.itemIndex]
 
       if(item == undefined) return;
 
@@ -66,7 +67,8 @@ class Schedule extends React.Component {
 
     itemRemoved(row){
       var rows = JSON.parse(JSON.stringify(this.state.rows))
-      var item = rows[row.rowIndex]['items'][row.itemIndex]
+      var rowIndex = this.state.rows.findIndex(o=>o.id == row.rowId) 
+      var item = rows[rowIndex]['items'][row.itemIndex]
 
       //save changes
       if(this.props.onScheduleItemRemoved){
@@ -75,14 +77,14 @@ class Schedule extends React.Component {
         deletePromise.then((deletePromiseResponse)=>{
           console.log("deleting on server")
           //delete item
-          rows[row.rowIndex]['items'].splice(row.itemIndex, 1);
+          rows[rowIndex]['items'].splice(row.itemIndex, 1);
           this.setState({rows: rows})
         }, reason => {
           console.error("couldnt delete event", reason)
         })
       }else{
         //delete item
-        rows[row.rowIndex]['items'].splice(row.itemIndex, 1);
+        rows[rowIndex]['items'].splice(row.itemIndex, 1);
         this.setState({rows: rows})
       }
 
@@ -96,7 +98,8 @@ class Schedule extends React.Component {
         var y = e.clientY - bounds.y - headerHeight
         var x = e.clientX - bounds.x - this.state.grid.x
         var rowId = e.target.id
-
+        var rowIndex = this.state.rows.findIndex(o=>o.id == rowId) 
+        
         var s = new ScheduleItem()
         var start = s.computeStartDate(x, this.state.weeks, this.state.grid)
         var thread = s.computeThread(y, this.state.grid)
@@ -112,18 +115,18 @@ class Schedule extends React.Component {
 
         //save changes
         if(this.props.onScheduleItemCreated){
-          var createPromise = this.props.onScheduleItemCreated(row)
+          var createPromise = this.props.onScheduleItemCreated(rowId, row)
 
           createPromise.then((createPromiseResponse)=>{
             row.id = createPromiseResponse.id
-            rows[rowId]['items'].push(row)
+            rows[rowIndex]['items'].push(row)
             this.setState({rows: rows})
           }, reason => {
             // rejection
             console.error("couldnt create event", reason)
           })
         }else{
-          rows[rowId]['items'].push(row)
+          rows[rowIndex]['items'].push(row)
           this.setState({rows: rows})
         }
 
@@ -187,7 +190,7 @@ class Schedule extends React.Component {
                     onRowClicked={this.addNewItem} 
                     grid={this.state.grid} 
                     key={i} 
-                    id={i} 
+                    id={row.id} 
                     items={row.items} 
                     threads={row.threads} 
                     itemRemoved={this.itemRemoved}

@@ -19,7 +19,7 @@ class ScheduleRow extends React.Component {
 
     onRemoved(index){
       var item = {
-        rowIndex: this.props.id,
+        rowId: this.props.id,
         itemIndex: index
       }
       this.props.itemRemoved((item))
@@ -28,7 +28,7 @@ class ScheduleRow extends React.Component {
     
     onDurationUpdated(index, duration){
       var item = {
-        rowIndex: this.props.id,
+        rowId: this.props.id,
         itemIndex: index,
         duration: duration 
       }
@@ -39,7 +39,7 @@ class ScheduleRow extends React.Component {
     onPositionUpdated(index, dimensions){
 
       var item = {
-        rowIndex: this.props.id,
+        rowId: this.props.id,
         itemIndex: index,
         dimensions: dimensions 
       }
@@ -48,7 +48,7 @@ class ScheduleRow extends React.Component {
 
     onTitleUpdated(index, title){
       var item = {
-        rowIndex: this.props.id,
+        rowId: this.props.id,
         itemIndex: index,
         title: title
       }
@@ -57,7 +57,7 @@ class ScheduleRow extends React.Component {
 
     onColorUpdated(index, color){
       var item = {
-        rowIndex: this.props.id,
+        rowId: this.props.id,
         itemIndex: index,
         color: color
       }
