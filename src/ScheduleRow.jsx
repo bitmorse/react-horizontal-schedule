@@ -48,7 +48,8 @@ class ScheduleRow extends React.Component {
         borderBottom: '1px solid #eee', 
         position: 'relative', 
         height: this.props.threads * this.props.grid.y,
-        width: this.props.grid.width
+        width: this.props.grid.width,
+        backgroundSize: this.props.grid.x+'px 100%'
       }
             
       return <div style={{display: 'flex'}}>
@@ -60,7 +61,7 @@ class ScheduleRow extends React.Component {
                 <h6>{this.props.subtitle}</h6>
                 </div>
               </div>
-              <div className={styles.scheduleRow + ' schedule-row'} id={this.props.id} onDoubleClick={this.props.onRowClicked} style={style}>{this.props.items.map((item, i)=>{
+              <div style={style} className={styles.scheduleRow + ' schedule-row'} id={this.props.id} onDoubleClick={this.props.onRowClicked}>{this.props.items.map((item, i)=>{
                 return <ScheduleItem
                           weeks={this.props.weeks}
                           color={item.color} 
