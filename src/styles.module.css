@@ -10,6 +10,8 @@
 }
 
 .scheduleRow {
+  border-bottom: 1px solid #eee;
+  position: relative; 
   touch-action: none;
   flex-shrink: 0;
   overflow: auto;
@@ -44,9 +46,15 @@
   width: 90%;
 }
 
-.scheduleItem > div {
+.scheduleItem {
+  user-select: none !important;
   overflow: hidden;
+  padding: 3px;
+  border: 1px solid white;
+  border-radius: 5px;
+  font-size: 10px;
 }
+
 
 .scheduleItemDate {
   font-size: 9px;
@@ -72,13 +80,11 @@
   border-top: 1px #eee solid;
   position: absolute;
   margin-top:-1px;
+  display: flex;
+  flex-shrink: 0;
 }
 
-.filter h5 {
-  margin: 0;
-  padding: 0;
-}
-.filter h6 {
+.filter h5, .filter h6 {
   margin: 0;
   padding: 0;
 }
