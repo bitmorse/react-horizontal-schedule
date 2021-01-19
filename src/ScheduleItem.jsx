@@ -21,7 +21,6 @@ class ScheduleItem extends React.Component {
     computeThread(y, grid){
       var inc = grid.y
       var thread = Math.ceil(y/inc)
-
       return thread
     }
 
@@ -29,16 +28,15 @@ class ScheduleItem extends React.Component {
       var startDay = moment(startDate).isoWeekday() - 1 //monday should be 0 (iso week starts on monday.
                                                         // isoWeekday() returns 1 for monday)
       var week = weeks.find(o => moment(o.startDate) <= moment(startDate) && moment(startDate) <= moment(o.endDate))
-      
       var startWeek = weeks.indexOf(week)
       
-
       return (startWeek * 7 + startDay) * grid.x
     }
 
     computeStartDate(x, weeks, grid){
-      //x += 1 //adding one pixel fixes the case where the position is unchanged but the date is recomputed to currentDate minus one
       var inc = grid.x
+      x -= inc/1.1 //this magic number gives the item a preference to snap to the date closest to its left
+
       var daysInWeek = 7
       var startsInWeek = Math.floor(Math.ceil(x/inc)/daysInWeek)
       var startsOnDay = Math.ceil(x/inc) - startsInWeek*daysInWeek
@@ -111,8 +109,7 @@ class ScheduleItem extends React.Component {
             width: this.props.grid.x * this.props.days,
             height: this.props.grid.y 
           }}
-          
-          dragGrid={[1, 1]}
+          dragGrid={[1,1]}
           resizeGrid={[this.props.grid.x, 1]}
         >
           <div

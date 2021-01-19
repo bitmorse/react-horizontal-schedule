@@ -96,7 +96,9 @@ class Schedule extends React.Component {
         var bounds = e.target.getBoundingClientRect()
         var headerHeight = 50 //height of the week title header
         var y = e.clientY - bounds.y - headerHeight
-        var x = e.clientX - bounds.x - this.state.grid.x
+        var x = e.clientX - bounds.x - this.state.grid.x 
+        x+= this.state.grid.x/1.1 //this undoes the magic number in computeStartDate
+
         var rowId = e.target.id
         var rowIndex = this.state.rows.findIndex(o=>o.id == rowId) 
         
